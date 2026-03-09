@@ -150,10 +150,16 @@
                 </h2>
                 <p class="text-gray-600 mt-2">問卷已成功紀錄，感謝你的用心填寫！</p>
                 
-                <button id="btn-export" class="mt-6 bg-gray-800 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 transition-all flex items-center justify-center mx-auto">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    匯出 CSV 紀錄
-                </button>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+                    <button id="btn-export" class="bg-gray-800 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 transition-all flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        匯出 CSV 紀錄
+                    </button>
+                    <a href="https://docs.google.com/spreadsheets/d/1RaBuCiDtj_SiH9AwLuobtuhSx8EckeJNkTQTVUvDPtI/edit?usp=sharing" target="_blank" class="bg-mint-green text-gray-800 font-bold py-3 px-8 rounded-full shadow-lg hover:brightness-110 transition-all flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        查看作答紀錄
+                    </a>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -531,27 +537,19 @@
             finalReportData = dataObj;
 
             // --- GAS Fetch Upload (Frontend Code) ---
-            // 將此處換成你的 GAS 部署網址
-            const gasURL = 'https://script.google.com/macros/s/AKfycbyG9MwUYNbYhxVyf8RAcs06xF3kEeGv8wtXXhXIoHa7LpZVGq4p6YVIZ2DAjUxTdd00sA/exec'
+            const gasURL = 'https://script.google.com/macros/s/AKfycbyG9MwUYNbYhxVyf8RAcs06xF3kEeGv8wtXXhXIoHa7LpZVGq4p6YVIZ2DAjUxTdd00sA/exec'; 
+            
             try {
-                // 如果您尚未部署 GAS，這裡會報 CORS 或 Failed to fetch 錯誤，
-                // 為了讓本機能順利展示圖表，如果 fetch 失敗我們依然進入成功畫面。
-                // 實際使用時請取消註解並確保 GAS 網址正確。
-                
-                
+                // 傳送資料到 Google Apps Script
                 await fetch(gasURL, {
                     method: 'POST',
-                    mode: 'no-cors', // 避免 CORS 問題
-                    headers: { 'Content-Type': 'application/json' },
+                    // 關鍵修正：使用 text/plain 可以完美避開 GAS 的 CORS 預檢錯誤
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(dataObj)
                 });
-                
-                
-                // 模擬網路延遲
-                await new Promise(r => setTimeout(r, 1500));
 
             } catch (error) {
-                console.warn("GAS 尚未設定或發生錯誤，但仍顯示分析報表", error);
+                console.warn("GAS 發生錯誤，但仍顯示分析報表", error);
             }
 
             closeModal('modal-loading');
