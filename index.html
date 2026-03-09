@@ -532,21 +532,21 @@
 
             // --- GAS Fetch Upload (Frontend Code) ---
             // 將此處換成你的 GAS 部署網址
-            const gasURL = "https://script.google.com/macros/s/AKfycbwRM6PQ3kgb4CDkDci97o9OqyAwnXxtAfb_WvswOzq7TgZ9kJPVdyiVQaMqhj0AdhAEwg/exec"; 
+            const gasURL = "https://script.google.com/macros/s/AKfycbwiKHYkY2mq9EC4NOYagxSdD603uwlUQb6KkB9WnspD1p-MHhseJKpnwxdPHxSBwPzRWQ/exec"; 
             
             try {
                 // 如果您尚未部署 GAS，這裡會報 CORS 或 Failed to fetch 錯誤，
                 // 為了讓本機能順利展示圖表，如果 fetch 失敗我們依然進入成功畫面。
                 // 實際使用時請取消註解並確保 GAS 網址正確。
                 
-                /*
+                
                 await fetch(gasURL, {
                     method: 'POST',
                     mode: 'no-cors', // 避免 CORS 問題
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataObj)
                 });
-                */
+                
                 
                 // 模擬網路延遲
                 await new Promise(r => setTimeout(r, 1500));
